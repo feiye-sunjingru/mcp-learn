@@ -16,8 +16,10 @@ from dotenv import load_dotenv
 load_dotenv()  # 加载 .env 文件中的 API Key
 
 
+# 创建基本的客户端类
 class MCPClient:
     def __init__(self):
+        """初始化会话和客户端对象"""
         self.session: Optional[ClientSession] = None
         self.exit_stack: AsyncExitStack = AsyncExitStack()
         self.anthropic = Anthropic()
@@ -27,6 +29,7 @@ class MCPClient:
     async def connect_to_server(self, server_script_path: str):
         """
         连接 MCP 服务器（支持 Python 或 Node.js 脚本）
+        server_script_path: 服务器脚本的路径
         """
         is_python = server_script_path.endswith(".py")
         is_js = server_script_path.endswith(".js")
@@ -41,6 +44,7 @@ class MCPClient:
             env=None,
         )
 
+        # 采用标准输入/输出方式并创建会话
         stdio_transport = await self.exit_stack.enter_async_context(
             stdio_client(server_params)
         )
@@ -52,6 +56,7 @@ class MCPClient:
 
         await self.session.initialize()
 
+        # 列出服务器提供的工具
         response = await self.session.list_tools()
         tools = response.tools
         print(f"\n✅ 已连接服务器，可用工具：{[tool.name for tool in tools]}")
@@ -59,7 +64,9 @@ class MCPClient:
     async def process_query(self, query: str) -> str:
         """
         使用 Claude 和 MCP 工具处理用户查询
+        处理查询和工具调用的主要逻辑
         """
+        # 1.先把用户问题放入对话上下文
         messages = [
             {
                 "role": "user",
@@ -67,18 +74,18 @@ class MCPClient:
             }
         ]
 
-        # 获取可用工具
+        # 2.从服务器获取可用工具
         response = await self.session.list_tools()
         available_tools = [
             {
                 "name": tool.name,
                 "description": tool.description,
-                "input_schema": tool.inputSchema,
+                "input_schema": tool.inputSchema,  # 注意：元景可能叫 parameters 而非 input_schema
             }
             for tool in response.tools
         ]
 
-        # 第一次调用 Claude
+        # 3.第一次调用 Claude
         response = self.anthropic.messages.create(
             model="claude-3-5-sonnet-20241022",
             max_tokens=1000,
@@ -86,10 +93,11 @@ class MCPClient:
             tools=available_tools,
         )
 
+        # 用于记录过程
         tool_results: List[Dict] = []
         final_text: List[str] = []
 
-        # 解析 Claude 输出
+        # 4.解析 Claude/元景模型 输出
         for content in response.content:
             if content.type == "text":
                 final_text.append(content.text)
@@ -122,10 +130,13 @@ class MCPClient:
                 )
                 final_text.append(response.content[0].text)
 
+        # 5. 返回最终回答
         return "\n".join(final_text)
 
     async def chat_loop(self) -> None:
-        """运行交互式聊天循环"""
+        """
+        运行交互式聊天循环
+        """
         print("\n🚀 MCP 客户端已启动！")
         print("请输入您的问题，或输入 'quit' 退出。\n")
 
@@ -147,6 +158,7 @@ class MCPClient:
 
 
 async def main():
+    """主函数：主执行逻辑"""
     if len(sys.argv) < 2:
         print("用法: python client.py <服务器脚本路径>")
         sys.exit(1)
