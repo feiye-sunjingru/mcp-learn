@@ -1,0 +1,10 @@
+{
+  "mcp_servers": {
+    "github.com/modelcontextprotocol/servers/tree/main/src/git":{
+        "command": "cmd",
+        "args": ["/c", "npx", "-y", "@modelcontextprotocol/server.github"],
+        "disable": false,
+        "autoApprove": []
+    }
+  }
+}
