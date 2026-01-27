@@ -1,4 +1,4 @@
-from mcpi.server import Server, Tool, Resource, Prompt
+from mcp import Server, Tool, Resource, Prompt
 import asyncio
 import json
 
