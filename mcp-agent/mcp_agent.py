@@ -17,7 +17,7 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 
-class MCPClient:
+class MCPAgent:
     """
     初始化 MCP 客户端类
     """
@@ -210,7 +210,7 @@ async def main():
     #     print("示例: python qwen_mcp_client.py ./tools/weather_tool.py")
     #     sys.exit(1)
 
-    client = MCPClient()
+    client = MCPAgent()
     try:
         await client.connect_to_server(sys.argv[1])  #"weather_tool.py"
         await client.chat_loop()
