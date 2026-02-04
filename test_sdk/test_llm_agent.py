@@ -2,19 +2,14 @@
 # 它通过 Azure OpenAI/自定义 OpenAI 兼容 API（如 Gemini 代理服务） 接口调用大语言模型（LLM），并生成自然语言响应
 import asyncio, os, sys
 from semantic_kernel.agents import ChatCompletionAgent
-# from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
-from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
 
 from dotenv import load_dotenv
 import logging, traceback
-# 创建标准的消息历史
-from semantic_kernel.contents import ChatHistory
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from llm_utils.completion import getGemini
 
 load_dotenv()
-chat_history = ChatHistory()
 logging.basicConfig(level=logging.DEBUG)
 
 async def main():
@@ -23,16 +18,6 @@ async def main():
         name="SK-Assistant",
         instructions="You are a helpful assistant.",
     )
-
-    # chat_history.add_user_message("Write a haiku about Semantic Kernel.")
-    
-    # # 使用更底层的方法
-    # result = []
-    # async for response in agent.invoke(chat_history):
-    #     result.append(response)
-
-    # for res in result:
-    #     print(res)
 
     try:
         # 获取用户消息的响应
