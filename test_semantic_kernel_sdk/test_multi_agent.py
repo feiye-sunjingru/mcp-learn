@@ -2,7 +2,7 @@ import asyncio
 from semantic_kernel.agents import ChatCompletionAgent
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from llm_utils.completion import getDashScope, getGemini
+from llm_utils.completion import getDashScope, getGoogle
 
 # 创建账单代理
 billing_agent = ChatCompletionAgent(
@@ -20,7 +20,7 @@ refund_agent = ChatCompletionAgent(
 
 # 创建分诊代理，并将其他两个代理作为插件注册
 triage_agent = ChatCompletionAgent(
-    service=getGemini(),
+    service=getGoogle(),
     name="TriageAgent",
     instructions=(
         "评估用户请求，并将它们转发给 BillingAgent 或 RefundAgent，"

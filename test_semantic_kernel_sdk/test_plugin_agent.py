@@ -9,7 +9,7 @@ from semantic_kernel.connectors.ai.open_ai import OpenAIPromptExecutionSettings
 
 # 确保项目根目录在模块搜索路径中：Python默认只在该文件所在目录（test_sdk）中查找模块，而 llm_utils 目录位于上级目录，所以需要手动将项目根目录添加到搜索路径中
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from llm_utils.completion import getGemini, getDashScope
+from llm_utils.completion import getGoogle, getDashScope
 
 # plugins/menu_plugin.py
 from typing import Annotated

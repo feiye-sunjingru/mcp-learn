@@ -4,7 +4,7 @@ import semantic_kernel as sk
 from semantic_kernel.agents import ChatCompletionAgent
 from agents.billing_agent import create_billing_agent
 from agents.refund_agent import create_refund_agent
-from llm_utils.completion import getGemini
+from llm_utils.completion import getGoogle
 
 def create_triage_agent():
     """创建分流代理（Triage Agent）"""
@@ -17,7 +17,7 @@ def create_triage_agent():
     # 失败
     # service = getOpenAI()
     # service = getDashScope()
-    service = getGemini()
+    service = getGoogle()
     if service is not None:
         kernel.add_service(service)
     else:
@@ -25,7 +25,7 @@ def create_triage_agent():
 
     #⚠️ 注意：Semantic Kernel 中，代理可以作为插件被其他代理调用，这是实现多代理协作的关键。
     return ChatCompletionAgent(
-        service=service,
+        service=getGoogle(),
         name="TriageAgent",
         instructions=(
             "你是客服系统的智能分流器。\n"

@@ -6,12 +6,12 @@ import semantic_kernel as sk
 # 创建标准的消息历史
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from llm_utils.completion import getGemini
+from llm_utils.completion import getGoogle
 async def main():
     # Semantic Kernel Python SDK 在 v1.x 中对 Kernel 做了自动封装
     # 使用ChatCompletionAgent 替代了 kernel()+add_service() + agent(kernel=...)
     kernel = sk.Kernel()
-    service = getGemini()
+    service = getGoogle()
     kernel.add_service(service)
 
     agent = ChatCompletionAgent(

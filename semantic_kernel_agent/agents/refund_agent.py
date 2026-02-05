@@ -10,7 +10,7 @@ def create_refund_agent():
     service = getDashScope()
 
     return ChatCompletionAgent(
-        service=service,
+        service=getDashScope(),
         name="RefundAgent",
         instructions=(
             "你是一个退款专家，专门处理以下问题：\n"

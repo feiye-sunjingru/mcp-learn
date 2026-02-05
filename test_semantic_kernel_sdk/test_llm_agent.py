@@ -7,14 +7,14 @@ from dotenv import load_dotenv
 import logging, traceback
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from llm_utils.completion import getGemini
+from llm_utils.completion import getGoogle
 
 load_dotenv()
 logging.basicConfig(level=logging.DEBUG)
 
 async def main():
     agent = ChatCompletionAgent(
-        service=getGemini(),
+        service=getGoogle(),
         name="SK-Assistant",
         instructions="You are a helpful assistant.",
     )
@@ -30,8 +30,8 @@ async def main():
 async def debug_api_response():
     import httpx
 
-    api_key = os.getenv("GEMINI_API_KEY")
-    base_url = os.getenv("GEMINI_BASE_URL")
+    api_key = os.getenv("GOOGLE_API_KEY")
+    base_url = os.getenv("GOOGLE_BASE_URL")
     
     # 首先直接测试API端点
     headers = {
