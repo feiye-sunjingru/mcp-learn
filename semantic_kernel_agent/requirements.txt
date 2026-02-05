@@ -1,0 +1,2 @@
+semantic-kernel>=1.36.0
+python-dotenv
