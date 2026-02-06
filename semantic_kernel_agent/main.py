@@ -4,6 +4,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import asyncio
 from dotenv import load_dotenv
 from agents.triage_agent import create_triage_agent
+from semantic_kernel.contents import ChatHistory
 
 # 加载环境变量
 load_dotenv()
@@ -15,9 +16,8 @@ async def main():
 
     # 创建分流代理（它内部已包含 Billing 和 Refund 代理）
     triage_agent = create_triage_agent()
-
-    # 共享对话线程（可选，用于多轮上下文）
-    thread_id = None
+    
+    chat_history = ChatHistory()
 
     while True:
         user_input = input("👤 用户: ").strip()
@@ -25,21 +25,19 @@ async def main():
             print("\n👋 再见！")
             break
 
-        if not user_input:
-            continue
+        chat_history.add_user_message(user_input)
 
-        try:
-            # 获取响应
-            response = await triage_agent.get_response(
-                messages=user_input,
-                thread_id=thread_id
-            )
+        # 获取响应
+        full_response = ""
+        async for response in triage_agent.invoke(chat_history):
             if response and response.content:
-                print(f"💬 助手: {response.content}\n")
-            else:
-                print("⚠️ 未能生成有效回复。\n")
-        except Exception as e:
-            print(f"❌ 发生错误: {e}\n")
+                full_response += str(response.content)
+        
+        if full_response:
+            print("🤖 客服:", full_response)
+            chat_history.add_assistant_message(full_response)    
+        else:
+            print("⚠️ 未能生成有效回复。\n")
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -13,12 +13,13 @@ def create_refund_agent():
         service=getDashScope(),
         name="RefundAgent",
         instructions=(
-            "你是一个退款专家，专门处理以下问题：\n"
-            "- 退款资格\n"
-            "- 退款政策\n"
-            "- 退款处理流程\n"
-            "- 退款状态查询\n"
-            "请提供清晰、合规的指导。"
+            "你是一个退款专家，必须严格遵循以下规则：\n"
+            "1. 所有关于处理退款、查询退款状态、检查是否符合退款资格、查询退款政策的问题，必须使用工具函数回答。\n"
+            "2. 当用户询问退款状态时，必须调用 get_refund_status(order_id) 获取订单退款状态，参数：订单ID。\n"
+            "3. 当需要判断用户是否符合退款资格时，必须调用 check_refund_eligibility(purchase_date, product_type) 查询，参数：购买日期、商品类型。\n"
+            "4. 当用户询问退款政策时，必须调用 get_refund_policy_summary() 查询。\n"
+            "5. 当用户要退款时，优先调用 deal_fund(order_id, purchase_date, product_type) 处理，参数：订单ID、购买日期、商品类型。\n"
+            "6. 不要凭空猜测退款流程，必须通过工具获取数据。\n"
         ),
         plugins=[RefundPlugin()],
     )
