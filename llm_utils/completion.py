@@ -65,7 +65,7 @@ def getDashScope():
     )
 
     service = OpenAIChatCompletion(
-        ai_model_id="qwen-turbo",
+        ai_model_id="qwen-plus",
         async_client=custom_client,
         service_id="dashscope_service"
     )
